@@ -2,6 +2,15 @@ const todoForm = document.getElementById('todo-form');
 const todoInput = document.getElementById('todo-input');
 const todoList = document.getElementById('todo-list');
 
+// Load tasks from localStorage on page load
+window.addEventListener('DOMContentLoaded', function() {
+    const savedTask = localStorage.getItem('task');
+    if (savedTask) {
+        console.log('Loaded from localStorage:', savedTask);
+        addTask(savedTask);
+    }
+});
+
 todoForm.addEventListener('submit', function(event) {
    event.preventDefault();// Prevent form submission
    const newTask = todoInput.value;
@@ -43,6 +52,11 @@ function addTask(task) {
             listItem.classList.add('Editing');
 
         }
+        // use localStorage to save the edited task
+        localStorage.setItem('task', taskText.textContent);
+        console.log(localStorage.getItem('task'));
+         
+  
     });
     const checkbox = document.createElement('input');
     checkbox.setAttribute('type', 'checkbox');
