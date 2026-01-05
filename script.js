@@ -33,31 +33,7 @@ function addTask(task) {
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
     listItem.appendChild(editButton);
-    editButton.addEventListener('click', function() {
-        const isEditing = listItem.classList.contains('Editing');
-        if(isEditing){
-            taskText.textContent = this.previousSibling.value;
-            listItem.insertBefore(taskText, this.previousSibling);
-            listItem.removeChild(this.previousSibling)
-            listItem.classList.remove('Editing');
-            editButton.textContent = 'Edit';
 
-        }else{
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = taskText.textContent;
-            listItem.insertBefore(input, taskText);
-            listItem.removeChild(taskText);
-            editButton.textContent = 'Save';
-            listItem.classList.add('Editing');
-
-        }
-        // use localStorage to save the edited task
-        localStorage.setItem('task', taskText.textContent);
-        console.log(localStorage.getItem('task'));
-         
-  
-    });
     const checkbox = document.createElement('input');
     checkbox.setAttribute('type', 'checkbox');
     listItem.appendChild(checkbox);
@@ -69,6 +45,7 @@ function addTask(task) {
     todoList.appendChild(listItem);
     checkTask(taskText, checkbox);
     deleteTask(listItem, deleteButton);
+    editTask(taskText, listItem, editButton);
 
 }
 
@@ -90,4 +67,28 @@ function deleteTask(listItem, deleteButton) {
         todoList.removeChild(listItem);
     });
 
+}
+
+function editTask(taskText,listItem, editButton) {
+
+    editButton.addEventListener('click', function() {
+        const isEditing = listItem.classList.contains('Editing');
+        if(isEditing){
+            taskText.textContent = this.previousSibling.value;
+            listItem.insertBefore(taskText, this.previousSibling);
+            listItem.removeChild(this.previousSibling)
+            listItem.classList.remove('Editing');
+            editButton.textContent = 'Edit';
+
+        }else{
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = taskText.textContent;
+            listItem.insertBefore(input, taskText);
+            listItem.removeChild(taskText);
+            editButton.textContent = 'Save';
+            listItem.classList.add('Editing');
+
+        }  
+    });
 }
