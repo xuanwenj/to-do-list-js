@@ -4,11 +4,11 @@ const todoList = document.getElementById('todo-list');
 
 // Load tasks from localStorage on page load
 window.addEventListener('DOMContentLoaded', function() {
-    const savedTask = localStorage.getItem('task');
-    if (savedTask) {
-        console.log('Loaded from localStorage:', savedTask);
-        addTask(savedTask);
-    }
+    let todos = JSON.parse(localStorage.getItem("savedtasks")) || [];
+    todos.forEach(task => {
+        console.log('Loading task:', task);
+        displayTask(task);  // Use displayTask instead of addTask
+    });
 });
 
 todoForm.addEventListener('submit', function(event) {
@@ -25,6 +25,19 @@ todoForm.addEventListener('submit', function(event) {
     });
 
 function addTask(task) {
+    displayTask(task);
+    
+    // Save to localStorage only when new task is added
+    let todos = JSON.parse(localStorage.getItem("savedtasks")) || [];
+    todos.push(task); 
+    localStorage.setItem('savedtasks', JSON.stringify(todos));
+    console.log('All tasks array:', todos);  
+    todos.forEach(savedtask => {
+        console.log('Single task:', savedtask);
+    });
+}
+
+function displayTask(task) {
     const listItem = document.createElement('li');
     const taskText = document.createElement('span');
     taskText.textContent = task;
@@ -46,7 +59,6 @@ function addTask(task) {
     checkTask(taskText, checkbox);
     deleteTask(listItem, deleteButton);
     editTask(taskText, listItem, editButton);
-
 }
 
 function checkTask(taskText, checkbox) {
