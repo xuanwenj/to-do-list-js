@@ -10,11 +10,11 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function saveTasktoLocalStorage(type, task, listItem) {
+function saveTasktoLocalStorage(type, newTaskValue, oldTaskValueOrElement) {
   switch (type) {
     case "add":
       let todos = JSON.parse(localStorage.getItem("savedtasks")) || [];
-      todos.push(task);
+      todos.push(newTaskValue);
       localStorage.setItem("savedtasks", JSON.stringify(todos));
       console.log("All tasks array:", todos);
       todos.forEach((savedtask) => {
@@ -24,11 +24,18 @@ function saveTasktoLocalStorage(type, task, listItem) {
     case "delete":
       let deletedtodos = JSON.parse(localStorage.getItem("savedtasks"));
       deletedtodos = deletedtodos.filter(
-        (t) => t !== listItem.querySelector("span").textContent
+        (t) => t !== oldTaskValueOrElement.querySelector("span").textContent
       );
       localStorage.setItem("savedtasks", JSON.stringify(deletedtodos));
       break;
     case "edit":
+      let editedtodos = JSON.parse(localStorage.getItem("savedtasks"));
+      const oldText = oldTaskValueOrElement;
+      editedtodos = editedtodos.map((t) => (t === oldText ? newTaskValue : t));
+      localStorage.setItem("savedtasks", JSON.stringify(editedtodos));
+      break;
+    default:
+      console.log("Invalid operation type");
   }
 }
 
@@ -93,12 +100,14 @@ function editTask(taskText, listItem, editButton) {
   editButton.addEventListener("click", function () {
     const isEditing = listItem.classList.contains("Editing");
     if (isEditing) {
+      const oldTaskText = taskText.textContent;
       const newTaskText = this.previousSibling.value;
       taskText.textContent = newTaskText;
       listItem.insertBefore(taskText, this.previousSibling);
       listItem.removeChild(this.previousSibling);
       listItem.classList.remove("Editing");
       editButton.textContent = "Edit";
+      saveTasktoLocalStorage("edit", newTaskText, oldTaskText);
     } else {
       const input = document.createElement("input");
       input.type = "text";
