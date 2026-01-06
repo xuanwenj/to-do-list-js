@@ -1,6 +1,7 @@
 const todoForm = document.getElementById("todo-form");
 const todoInput = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
+const clearButton = document.getElementById("clear-button");
 
 // Load tasks from localStorage on page load
 window.addEventListener("DOMContentLoaded", function () {
@@ -34,6 +35,7 @@ function saveTasktoLocalStorage(type, newTaskValue, oldTaskValueOrElement) {
       editedtodos = editedtodos.map((t) => (t === oldText ? newTaskValue : t));
       localStorage.setItem("savedtasks", JSON.stringify(editedtodos));
       break;
+    //TODO: Implement 'check' case if needed in future
     default:
       console.log("Invalid operation type");
   }
@@ -49,6 +51,12 @@ todoForm.addEventListener("submit", function (event) {
   }
   todoInput.value = "";
   addTask(newTask);
+});
+
+clearButton.addEventListener("click", function (event) {
+  event.preventDefault();
+  todoList.innerHTML = " ";
+  localStorage.removeItem("savedtasks");
 });
 
 function addTask(task) {
