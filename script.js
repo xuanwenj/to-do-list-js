@@ -2,6 +2,9 @@ const todoForm = document.getElementById("todo-form");
 const todoInput = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
 const clearButton = document.getElementById("clear-button");
+const pendingCountSpan = document.getElementById("pending-count");
+const completedCountSpan = document.getElementById("completed-count");
+const totalCountSpan = document.getElementById("total-count");
 
 // Load tasks from localStorage on page load
 window.addEventListener("DOMContentLoaded", function () {
@@ -9,6 +12,11 @@ window.addEventListener("DOMContentLoaded", function () {
   todos.forEach((task) => {
     displayTask(task); // Use displayTask instead of addTask
   });
+
+  // Restore counts from localStorage
+  pendingCountSpan.textContent = localStorage.getItem("pendingCount") || 0;
+  completedCountSpan.textContent = localStorage.getItem("completedCount") || 0;
+  totalCountSpan.textContent = localStorage.getItem("totalCount") || 0;
 });
 
 function saveTasktoLocalStorage(type, newTaskValue, oldTaskValueOrElement) {
@@ -40,6 +48,15 @@ function saveTasktoLocalStorage(type, newTaskValue, oldTaskValueOrElement) {
       console.log("Invalid operation type");
   }
 }
+function updateTaskCountsInLocalStorage(
+  pendingChange,
+  completedChange,
+  totalChange
+) {
+  localStorage.setItem("pendingCount", parseInt(pendingChange));
+  localStorage.setItem("completedCount", parseInt(completedChange));
+  localStorage.setItem("totalCount", parseInt(totalChange));
+}
 
 todoForm.addEventListener("submit", function (event) {
   event.preventDefault(); // Prevent form submission
@@ -55,13 +72,24 @@ todoForm.addEventListener("submit", function (event) {
 
 clearButton.addEventListener("click", function (event) {
   event.preventDefault();
-  todoList.innerHTML = " ";
+  todoList.innerHTML = "";
   localStorage.removeItem("savedtasks");
+  pendingCountSpan.textContent = 0;
+  completedCountSpan.textContent = 0;
+  totalCountSpan.textContent = 0;
+  updateTaskCountsInLocalStorage(0, 0, 0);
 });
 
 function addTask(task) {
   displayTask(task);
   saveTasktoLocalStorage("add", task);
+  pendingCountSpan.textContent = parseInt(pendingCountSpan.textContent) + 1;
+  totalCountSpan.textContent = parseInt(totalCountSpan.textContent) + 1;
+  updateTaskCountsInLocalStorage(
+    pendingCountSpan.textContent,
+    completedCountSpan.textContent,
+    totalCountSpan.textContent
+  );
 }
 
 function displayTask(task) {
@@ -92,8 +120,24 @@ function checkTask(taskText, checkbox) {
   checkbox.addEventListener("change", function () {
     if (checkbox.checked) {
       taskText.style.textDecoration = "line-through";
+      completedCountSpan.textContent =
+        parseInt(completedCountSpan.textContent) + 1;
+      pendingCountSpan.textContent = parseInt(pendingCountSpan.textContent) - 1;
+      updateTaskCountsInLocalStorage(
+        pendingCountSpan.textContent,
+        completedCountSpan.textContent,
+        totalCountSpan.textContent
+      );
     } else {
       taskText.style.textDecoration = "none";
+      completedCountSpan.textContent =
+        parseInt(completedCountSpan.textContent) - 1;
+      pendingCountSpan.textContent = parseInt(pendingCountSpan.textContent) + 1;
+      updateTaskCountsInLocalStorage(
+        pendingCountSpan.textContent,
+        completedCountSpan.textContent,
+        totalCountSpan.textContent
+      );
     }
   });
 }
@@ -101,6 +145,18 @@ function deleteTask(listItem, deleteButton) {
   deleteButton.addEventListener("click", function () {
     todoList.removeChild(listItem);
     saveTasktoLocalStorage("delete", null, listItem);
+    if (listItem.querySelector("input").checked) {
+      completedCountSpan.textContent =
+        parseInt(completedCountSpan.textContent) - 1;
+    } else {
+      pendingCountSpan.textContent = parseInt(pendingCountSpan.textContent) - 1;
+    }
+    totalCountSpan.textContent = parseInt(totalCountSpan.textContent) - 1;
+    updateTaskCountsInLocalStorage(
+      pendingCountSpan.textContent,
+      completedCountSpan.textContent,
+      totalCountSpan.textContent
+    );
   });
 }
 

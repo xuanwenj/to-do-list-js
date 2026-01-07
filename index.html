@@ -8,7 +8,13 @@
 </head>
 <body>
     <div id="todo-app">
-         <h1>My To-Do List</h1>
+        <h1>My To-Do List</h1>
+        <div id="task-count">
+         <p>Unfinished: <span id="pending-count">0</span></p>
+         <p>Finishied: <span id="completed-count">0</span></p>
+         <p>Total: <span id="total-count">0</span></p>
+        </div>
+         
          <form id="todo-form">
          <input type="text" placeholder="Add a new task"  id="todo-input"/>
             <button type="submit">Add Task</button>   
