@@ -2,9 +2,12 @@ const todoForm = document.getElementById("todo-form");
 const todoInput = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
 const clearButton = document.getElementById("clear-button");
+
 const pendingCountSpan = document.getElementById("pending-count");
 const completedCountSpan = document.getElementById("completed-count");
 const totalCountSpan = document.getElementById("total-count");
+
+const taskFilter = document.getElementById("taskFilter");
 
 // Load tasks from localStorage on page load
 window.addEventListener("DOMContentLoaded", function () {
