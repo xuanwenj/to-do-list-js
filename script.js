@@ -22,8 +22,8 @@ window.addEventListener("DOMContentLoaded", function () {
   totalCountSpan.textContent = localStorage.getItem("totalCount") || 0;
 });
 
-function saveTasktoLocalStorage(type, newTaskValue, oldTaskValueOrElement) {
-  switch (type) {
+function saveTasktoLocalStorage(operation, newTaskValue, oldTaskValueOrElement) {
+  switch (operation) {
     case "add":
       let todos = JSON.parse(localStorage.getItem("savedtasks")) || [];
       todos.push(newTaskValue);
