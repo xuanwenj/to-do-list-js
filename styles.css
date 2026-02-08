@@ -28,6 +28,9 @@ body{
   justify-content: space-between;
   margin-bottom: 10px;
 }
+#taskFilter {
+  display: none;
+}
 #todo-form {
   display: flex;
   align-items: stretch;
